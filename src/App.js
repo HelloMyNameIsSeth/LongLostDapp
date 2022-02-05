@@ -99,7 +99,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [feedback, setFeedback] = useState(`Click buy to mint your NFT.`);
+  const [feedback, setFeedback] = useState(`Click mint to mint your NFT.`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -125,14 +125,42 @@ function App() {
     let gasLimit = CONFIG.GAS_LIMIT;
     let totalCostWei = String(cost * mintAmount);
     let totalGasLimit = String(gasLimit * mintAmount);
-    console.log(blockchain.account)
-    const blob = await fetch(`https://longlostwhitelist.herokuapp.com/${blockchain.account}`)
-    const { proof } = await blob.json()
-    console.log(proof)
+    console.log(blockchain.account);
+    const blob = await fetch(
+      `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
+    );
+    const { proof } = await blob.json();
+    console.log(proof);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
     setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
     setClaimingNft(true);
+
+    if (data.isAllowListActive) {
+      blockchain.smartContract.methods
+        .mintAllowList(mintAmount, proof)
+        .send({
+          gasLimit: String(totalGasLimit),
+          to: CONFIG.CONTRACT_ADDRESS,
+          from: blockchain.account,
+          value: totalCostWei,
+        })
+        .once("error", (err) => {
+          console.log(err);
+          setFeedback("Sorry, something went wrong please try again later.");
+          setClaimingNft(false);
+        })
+        .then((receipt) => {
+          console.log(receipt);
+          setFeedback(
+            `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
+          );
+          setClaimingNft(false);
+          dispatch(fetchData(blockchain.account));
+        });
+      return;
+    }
+
     blockchain.smartContract.methods
       .mint(mintAmount)
       .send({
@@ -156,7 +184,6 @@ function App() {
       });
   };
 
-
   const decrementMintAmount = () => {
     let newMintAmount = mintAmount - 1;
     if (newMintAmount < 1) {
@@ -167,8 +194,11 @@ function App() {
 
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
-    if (newMintAmount > 5) {
-      newMintAmount = 5;
+
+    if (
+      newMintAmount > (data.isAllowListActive ? data.allowListMintAmount : 25)
+    ) {
+      return;
     }
     setMintAmount(newMintAmount);
   };
@@ -209,15 +239,12 @@ function App() {
         <StyledLogo alt={"logo"} src={"/config/images/LL-LOGO.svg"} />
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
-          <s.Container flex={1} jc={"center"} ai={"center"}>
-
-          </s.Container>
+          <s.Container flex={1} jc={"center"} ai={"center"}></s.Container>
           <s.SpacerLarge />
           <s.Container
             flex={2}
             jc={"center"}
             ai={"center"}
-
             style={{
               backgroundColor: "var(--accent)",
               padding: 24,
@@ -245,9 +272,18 @@ function App() {
                 color: "var(--accent-text)",
               }}
             >
-              Minted: {} / 5
+              Minted:{" "}
+              {(data.isAllowListActive
+                ? data.allowListMintAmount
+                : data.maxMintAmountPerTx) -
+                (data.isAllowListActive
+                  ? data.remainingAllowListMints
+                  : data.remainingPublicMints) || 0}{" "}
+              /{" "}
+              {data.isAllowListActive
+                ? data.allowListMintAmount
+                : data.maxMintAmountPerTx}
             </s.TextTitle>
-
 
             <s.TextDescription
               style={{
@@ -256,7 +292,7 @@ function App() {
               }}
             >
               <StyledLink target={"_blank"} href={CONFIG.SCAN_LINK}>
-                {truncate(CONFIG.CONTRACT_ADDRESS, 15)}
+                {blockchain.account}
               </StyledLink>
             </s.TextDescription>
             <s.SpacerSmall />
@@ -282,18 +318,15 @@ function App() {
                 <s.TextTitle
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  {mintAmount} {CONFIG.SYMBOL} costs {mintAmount * 0.04}  {" "}
+                  {mintAmount} {CONFIG.SYMBOL} costs{" "}
+                  {(mintAmount * (data.isAllowListActive ? 4 : 5)) / 100}{" "}
                   {CONFIG.NETWORK.SYMBOL}.
                 </s.TextTitle>
                 <s.SpacerXSmall />
                 <s.TextDescription
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-            
-                  Excluding gas fees. 
-
-                  
-
+                  Excluding gas fees.
                 </s.TextDescription>
                 <s.SpacerSmall />
                 {blockchain.account === "" ||
@@ -367,7 +400,7 @@ function App() {
                         disabled={claimingNft ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
-                            incrementMintAmount();
+                          incrementMintAmount();
                         }}
                       >
                         +
@@ -383,7 +416,7 @@ function App() {
                           getData();
                         }}
                       >
-                        {claimingNft ? "BUSY" : "BUY"}
+                        {claimingNft ? "BUSY" : "MINT"}
                       </StyledButton>
                     </s.Container>
                   </>
@@ -393,9 +426,7 @@ function App() {
             <s.SpacerMedium />
           </s.Container>
           <s.SpacerLarge />
-          <s.Container flex={1} jc={"center"} ai={"center"}>
-
-          </s.Container>
+          <s.Container flex={1} jc={"center"} ai={"center"}></s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />
         <s.Container jc={"center"} ai={"center"} style={{ width: "70%" }}>
