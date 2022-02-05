@@ -136,33 +136,8 @@ function App() {
     setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
     setClaimingNft(true);
 
-    if (data.isAllowListActive) {
-      blockchain.smartContract.methods
-        .mintAllowList(mintAmount, proof)
-        .send({
-          gasLimit: String(totalGasLimit),
-          to: CONFIG.CONTRACT_ADDRESS,
-          from: blockchain.account,
-          value: totalCostWei,
-        })
-        .once("error", (err) => {
-          console.log(err);
-          setFeedback("Sorry, something went wrong please try again later.");
-          setClaimingNft(false);
-        })
-        .then((receipt) => {
-          console.log(receipt);
-          setFeedback(
-            `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
-          );
-          setClaimingNft(false);
-          dispatch(fetchData(blockchain.account));
-        });
-      return;
-    }
-
     blockchain.smartContract.methods
-      .mint(mintAmount)
+      .mintAllowList(mintAmount, proof)
       .send({
         gasLimit: String(totalGasLimit),
         to: CONFIG.CONTRACT_ADDRESS,
@@ -182,6 +157,7 @@ function App() {
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
       });
+    return;
   };
 
   const decrementMintAmount = () => {
@@ -195,9 +171,7 @@ function App() {
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
 
-    if (
-      newMintAmount > (data.isAllowListActive ? data.allowListMintAmount : 25)
-    ) {
+    if (newMintAmount > data.remainingAllowListMints) {
       return;
     }
     setMintAmount(newMintAmount);
@@ -272,17 +246,7 @@ function App() {
                 color: "var(--accent-text)",
               }}
             >
-              Minted:{" "}
-              {(data.isAllowListActive
-                ? data.allowListMintAmount
-                : data.maxMintAmountPerTx) -
-                (data.isAllowListActive
-                  ? data.remainingAllowListMints
-                  : data.remainingPublicMints) || 0}{" "}
-              /{" "}
-              {data.isAllowListActive
-                ? data.allowListMintAmount
-                : data.maxMintAmountPerTx}
+              Minted: {5 - data.remainingAllowListMints || 0} / 5
             </s.TextTitle>
 
             <s.TextDescription
@@ -318,8 +282,7 @@ function App() {
                 <s.TextTitle
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  {mintAmount} {CONFIG.SYMBOL} costs{" "}
-                  {(mintAmount * (data.isAllowListActive ? 4 : 5)) / 100}{" "}
+                  {mintAmount} {CONFIG.SYMBOL} costs {(mintAmount * 4) / 100}{" "}
                   {CONFIG.NETWORK.SYMBOL}.
                 </s.TextTitle>
                 <s.SpacerXSmall />
