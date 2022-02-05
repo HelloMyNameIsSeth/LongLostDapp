@@ -32,11 +32,11 @@ export const StyledRoundButton = styled.button`
   padding: 10px;
   border-radius: 100%;
   border: none;
-  background-color: var(--primary);
+  background-color: #000000;
   padding: 10px;
   font-weight: bold;
   font-size: 15px;
-  color: var(--primary-text);
+  color: #ffffff;
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -156,6 +156,7 @@ function App() {
       });
   };
 
+
   const decrementMintAmount = () => {
     let newMintAmount = mintAmount - 1;
     if (newMintAmount < 1) {
@@ -166,8 +167,8 @@ function App() {
 
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
-    if (newMintAmount > 10) {
-      newMintAmount = 10;
+    if (newMintAmount > 5) {
+      newMintAmount = 5;
     }
     setMintAmount(newMintAmount);
   };
@@ -203,19 +204,20 @@ function App() {
         flex={1}
         ai={"center"}
         style={{ padding: 24, backgroundColor: "var(--primary)" }}
-        image={CONFIG.SHOW_BACKGROUND ? "/config/images/bg.png" : null}
+        image={CONFIG.SHOW_BACKGROUND ? "/config/images/LL-BG.png" : null}
       >
-        <StyledLogo alt={"logo"} src={"/config/images/logo.png"} />
+        <StyledLogo alt={"logo"} src={"/config/images/LL-LOGO.svg"} />
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.Container flex={1} jc={"center"} ai={"center"}>
-            <StyledImg alt={"example"} src={"/config/images/example.gif"} />
+
           </s.Container>
           <s.SpacerLarge />
           <s.Container
             flex={2}
             jc={"center"}
             ai={"center"}
+
             style={{
               backgroundColor: "var(--accent)",
               padding: 24,
@@ -267,14 +269,16 @@ function App() {
                 <s.TextTitle
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  1 {CONFIG.SYMBOL} costs {CONFIG.DISPLAY_COST}{" "}
+                  {mintAmount} {CONFIG.SYMBOL} costs {mintAmount * 0.04}  {" "}
                   {CONFIG.NETWORK.SYMBOL}.
                 </s.TextTitle>
                 <s.SpacerXSmall />
                 <s.TextDescription
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  Excluding gas fees.
+            
+                  Excluding gas fees. 
+
                 </s.TextDescription>
                 <s.SpacerSmall />
                 {blockchain.account === "" ||
@@ -348,7 +352,7 @@ function App() {
                         disabled={claimingNft ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
-                          incrementMintAmount();
+                            incrementMintAmount();
                         }}
                       >
                         +
@@ -375,11 +379,7 @@ function App() {
           </s.Container>
           <s.SpacerLarge />
           <s.Container flex={1} jc={"center"} ai={"center"}>
-            <StyledImg
-              alt={"example"}
-              src={"/config/images/example.gif"}
-              style={{ transform: "scaleX(-1)" }}
-            />
+
           </s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />
