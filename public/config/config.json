@@ -1,6 +1,6 @@
 {
-  "CONTRACT_ADDRESS": "0x54FCbcb768AE15DE379528C926f087099CEbc11A",
-  "SCAN_LINK": "https://rinkeby.etherscan.io/address/0x54fcbcb768ae15de379528c926f087099cebc11a",
+  "CONTRACT_ADDRESS": "0x0049Fa9514C201ED39DF31fBB9cF4D01d063feAF",
+  "SCAN_LINK": "https://rinkeby.etherscan.io/address/0x0049Fa9514C201ED39DF31fBB9cF4D01d063feAF",
   "NETWORK": {
     "NAME": "Rinkeby",
     "SYMBOL": "ETH",
@@ -9,7 +9,7 @@
   "NFT_NAME": "Long Lost",
   "SYMBOL": "LOST",
   "MAX_SUPPLY": 10000,
-  "WEI_COST": 1000000000000000,
+  "WEI_COST": 40000000000000000,
   "DISPLAY_COST": 0.04,
   "GAS_LIMIT": 500000,
   "MARKETPLACE": "Opeansea",
