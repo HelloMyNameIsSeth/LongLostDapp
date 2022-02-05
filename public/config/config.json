@@ -1,10 +1,10 @@
 {
-  "CONTRACT_ADDRESS": "0x58977A3001fB8f93A61E64Dcd7081f3dD78eDF1B",
-  "SCAN_LINK": "https://rinkeby.etherscan.io/address/0x58977A3001fB8f93A61E64Dcd7081f3dD78eDF1B",
+  "CONTRACT_ADDRESS": "0x1347a97789cd3aa0b11433e8117f55ab640a0451",
+  "SCAN_LINK": "https://etherscan.io/address/0x1347a97789cd3aa0b11433e8117f55ab640a0451",
   "NETWORK": {
-    "NAME": "Rinkeby",
+    "NAME": "Ethereum",
     "SYMBOL": "ETH",
-    "ID": 4
+    "ID": 1
   },
   "NFT_NAME": "Long Lost",
   "SYMBOL": "LOST",
@@ -12,7 +12,7 @@
   "WEI_COST": 40000000000000000,
   "DISPLAY_COST": 0.04,
   "GAS_LIMIT": 500000,
-  "MARKETPLACE": "Opeansea",
-  "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
+  "MARKETPLACE": "Opensea",
+  "MARKETPLACE_LINK": "https://opensea.io/TheLongLost",
   "SHOW_BACKGROUND": true
 }
