@@ -236,6 +236,19 @@ function App() {
             >
               {data.totalSupply} / {CONFIG.MAX_SUPPLY}
             </s.TextTitle>
+
+            <s.TextTitle
+              style={{
+                textAlign: "center",
+                fontSize: 30,
+                fontWeight: "bold",
+                color: "var(--accent-text)",
+              }}
+            >
+              Minted: {} / 5
+            </s.TextTitle>
+
+
             <s.TextDescription
               style={{
                 textAlign: "center",
@@ -278,6 +291,8 @@ function App() {
                 >
             
                   Excluding gas fees. 
+
+                  
 
                 </s.TextDescription>
                 <s.SpacerSmall />
