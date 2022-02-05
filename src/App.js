@@ -129,7 +129,7 @@ function App() {
     let cost = CONFIG.WEI_COST;
     let gasLimit = CONFIG.GAS_LIMIT;
     let totalCostWei = String(cost * mintAmount);
-    let totalGasLimit = String(gasLimit * mintAmount);
+    let totalGasLimit = String(gasLimit + 30000 * mintAmount);
     console.log(blockchain.account);
     const blob = await fetch(
       `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
