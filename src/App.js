@@ -26,6 +26,9 @@ export const StyledButton = styled.button`
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
   }
+  :disabled {
+    background-color: rgba(250, 250, 250, 0.3);
+  }
 `;
 
 export const StyledRoundButton = styled.button`
@@ -101,6 +104,8 @@ function App() {
   const [claimingNft, setClaimingNft] = useState(false);
   const [feedback, setFeedback] = useState(`Click mint to mint your NFT.`);
   const [mintAmount, setMintAmount] = useState(1);
+  const [mintButtonEnabled, setMintButtonEnabled] = useState(false);
+
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
     SCAN_LINK: "",
@@ -201,6 +206,25 @@ function App() {
   useEffect(() => {
     getData();
   }, [blockchain.account]);
+
+  useEffect(async () => {
+    if (blockchain.account) {
+      const blob = await fetch(
+        `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
+      );
+      const { proof } = await blob.json();
+      console.log({ proof });
+      if (!proof || proof.length === 0) {
+        return setMintButtonEnabled(false);
+      }
+      console.log(data.isContractPaused, data.remainingAllowListMints <= 0);
+      if (data.isContractPaused || data.remainingAllowListMints <= 0) {
+        return setMintButtonEnabled(false);
+      }
+
+      setMintButtonEnabled(true);
+    }
+  }, [data]);
 
   return (
     <s.Screen>
@@ -372,7 +396,7 @@ function App() {
                     <s.SpacerSmall />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledButton
-                        disabled={claimingNft ? 1 : 0}
+                        disabled={claimingNft || !mintButtonEnabled}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();

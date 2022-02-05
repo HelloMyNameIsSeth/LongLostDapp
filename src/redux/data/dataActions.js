@@ -52,6 +52,7 @@ export const fetchData = () => {
         maxMintAmountPerTx,
         remainingAllowListMints,
         remainingPublicMints,
+        isContractPaused,
       ] = await Promise.all([
         store.getState().blockchain.smartContract.methods.totalSupply().call(),
         store
@@ -78,6 +79,7 @@ export const fetchData = () => {
             store.getState().blockchain.account
           )
           .call(),
+        store.getState().blockchain.smartContract.methods.paused().call(),
       ]);
 
       dispatch(
@@ -88,6 +90,7 @@ export const fetchData = () => {
           maxMintAmountPerTx,
           remainingAllowListMints,
           remainingPublicMints,
+          isContractPaused,
         })
       );
     } catch (err) {
