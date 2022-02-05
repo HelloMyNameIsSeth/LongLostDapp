@@ -11,7 +11,7 @@
   "MAX_SUPPLY": 10000,
   "WEI_COST": 40000000000000000,
   "DISPLAY_COST": 0.04,
-  "GAS_LIMIT": 500000,
+  "GAS_LIMIT": 160000,
   "MARKETPLACE": "Opensea",
   "MARKETPLACE_LINK": "https://opensea.io/TheLongLost",
   "SHOW_BACKGROUND": true
