@@ -213,11 +213,9 @@ function App() {
         `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
       );
       const { proof } = await blob.json();
-      console.log({ proof });
       if (!proof || proof.length === 0) {
         return setMintButtonEnabled(false);
       }
-      console.log(data.isContractPaused, data.remainingAllowListMints <= 0);
       if (data.isContractPaused || data.remainingAllowListMints <= 0) {
         return setMintButtonEnabled(false);
       }
