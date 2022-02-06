@@ -131,18 +131,18 @@ function App() {
     let totalCostWei = String(cost * mintAmount);
     let totalGasLimit = String(gasLimit + 30000 * mintAmount);
     console.log(blockchain.account);
-    const blob = await fetch(
-      `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
-    );
-    const { proof } = await blob.json();
-    console.log(proof);
+    // const blob = await fetch(
+    //   `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
+    // );
+    // const { proof } = await blob.json();
+    // console.log(proof);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
     setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
     setClaimingNft(true);
 
     blockchain.smartContract.methods
-      .mintAllowList(mintAmount, proof)
+      .mint(mintAmount)
       .send({
         gasLimit: String(totalGasLimit),
         to: CONFIG.CONTRACT_ADDRESS,
@@ -176,7 +176,7 @@ function App() {
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
 
-    if (newMintAmount > data.remainingAllowListMints) {
+    if (newMintAmount > data.remainingPublicMints) {
       return;
     }
     setMintAmount(newMintAmount);
@@ -209,14 +209,14 @@ function App() {
 
   useEffect(async () => {
     if (blockchain.account) {
-      const blob = await fetch(
-        `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
-      );
-      const { proof } = await blob.json();
-      if (!proof || proof.length === 0) {
-        return setMintButtonEnabled(false);
-      }
-      if (data.isContractPaused || data.remainingAllowListMints <= 0) {
+      // const blob = await fetch(
+      //   `https://longlostwhitelist.herokuapp.com/${blockchain.account}`
+      // );
+      // const { proof } = await blob.json();
+      // if (!proof || proof.length === 0) {
+      //   return setMintButtonEnabled(false);
+      // }
+      if (data.isContractPaused || data.remainingPublicMints <= 0) {
         return setMintButtonEnabled(false);
       }
 
@@ -268,7 +268,7 @@ function App() {
                 color: "var(--accent-text)",
               }}
             >
-              Minted: {5 - data.remainingAllowListMints || 0} / 5
+              Minted: {20 - data.remainingPublicMints || 0} / 20
             </s.TextTitle>
 
             <s.TextDescription
@@ -304,7 +304,7 @@ function App() {
                 <s.TextTitle
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  {mintAmount} {CONFIG.SYMBOL} costs {(mintAmount * 4) / 100}{" "}
+                  {mintAmount} {CONFIG.SYMBOL} costs {(mintAmount * 5) / 100}{" "}
                   {CONFIG.NETWORK.SYMBOL}.
                 </s.TextTitle>
                 <s.SpacerXSmall />
