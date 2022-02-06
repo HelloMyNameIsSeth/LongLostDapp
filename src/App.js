@@ -176,6 +176,10 @@ function App() {
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
 
+    if (newMintAmount > 10) {
+      return;
+    }
+
     if (newMintAmount > data.remainingPublicMints) {
       return;
     }
@@ -268,7 +272,7 @@ function App() {
                 color: "var(--accent-text)",
               }}
             >
-              Minted: {20 - data.remainingPublicMints || 0} / 20
+              Minted: {10 - data.remainingPublicMints || 0} / 10
             </s.TextTitle>
 
             <s.TextDescription
